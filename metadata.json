@@ -1,0 +1,8 @@
+{
+  "name": "GigaWalls",
+  "description": "A high-performance UHD wallpaper gallery featuring 4K downloads, category-based browsing, and advanced search functionality inspired by premium mobile wallpaper apps.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
