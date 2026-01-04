@@ -5,6 +5,7 @@ import { Wallpaper, CategoryType } from '../types';
 import { wallpaperService } from '../services/wallpaperService';
 import WallpaperCard from '../components/WallpaperCard';
 import CategoryTabs from '../components/CategoryTabs';
+import Footer from '../components/Footer';
 
 const HomeScreen: React.FC = () => {
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
@@ -118,6 +119,8 @@ const HomeScreen: React.FC = () => {
           </div>
         )}
       </main>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
