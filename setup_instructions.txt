@@ -1,0 +1,50 @@
+
+GIGAWALLS SETUP INSTRUCTIONS
+
+GigaWalls is built as a responsive Single Page Application (SPA) designed with a mobile-first philosophy to mimic high-end mobile apps like UHD Paper.
+
+--- SYSTEM REQUIREMENTS ---
+- Node.js (v18 or higher)
+- npm or yarn
+
+--- PROJECT STRUCTURE ---
+- src/index.tsx: Entry point
+- src/App.tsx: Main routing and layout
+- src/components/: Reusable UI units (Cards, Navbars, Sliders)
+- src/screens/: Main page views (Home, Detail)
+- src/services/: Data fetching logic and mock API simulation
+- src/types.ts: Global TypeScript definitions
+
+--- GETTING STARTED ---
+1. Install dependencies:
+   npm install
+
+2. Start the development server:
+   npm run dev
+
+3. Open your browser:
+   Visit http://localhost:5173 (or the port specified in terminal)
+
+--- KEY FEATURES ---
+- Mobile Masonry Grid: Smooth 2-column grid that scales to desktop
+- Infinite Scroll: Automatically loads more content as you scroll
+- Dynamic Categories: Filter by 11 high-quality themes
+- Real-time Search: Instant filtering across titles and tags
+- Multi-Quality Downloads: Choice between HD, Full HD, QHD, and 4K
+- Dark Premium UI: Using slate-950/900 palette with blue accents
+
+--- DATA HANDLING ---
+The app uses a 'wallpaperService' that simulates a backend. It generates unique wallpaper objects with metadata including:
+- High-res source URL logic
+- Category mapping
+- Unique ID system
+- Tag clouds
+- Resolution specific dimensions
+
+Wallpapers are "downloaded" by dynamically generating blob-like triggers for browser saving functionality.
+
+--- READY FOR BUILD ---
+To build for production:
+npm run build
+
+The output will be in the 'dist' folder, ready for deployment to any static host (Netlify, Vercel, Firebase).
