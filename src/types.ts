@@ -11,12 +11,29 @@ export type CategoryType =
   | "Sci-Fi"
   | "Space";
 
+export const CATEGORIES: CategoryType[] = [
+  "Home",
+  "Games",
+  "Anime",
+  "Movies",
+  "Series",
+  "Animals",
+  "Nature",
+  "Celebrity",
+  "Comic",
+  "Sci-Fi",
+  "Space",
+];
+
 export interface Wallpaper {
   id: string;
   title: string;
   thumbnail: string;
   category: CategoryType;
   tags: string[];
+  downloads?: {
+    hd?: string;
+  };
   author: string;
   slug: string;
 }
