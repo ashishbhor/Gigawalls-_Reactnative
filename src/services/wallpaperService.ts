@@ -1,32 +1,14 @@
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { Wallpaper, CategoryType } from "../types";
 
 export const wallpaperService = {
   async getWallpapers(category: CategoryType): Promise<Wallpaper[]> {
-    let q;
-
-    if (category !== "Home") {
-      q = query(
-        collection(db, "wallpapers"),
-        where("category", "==", category),
-        orderBy("createdAt", "desc"),
-        limit(20)
-      );
-    } else {
-      q = query(
-        collection(db, "wallpapers"),
-        orderBy("createdAt", "desc"),
-        limit(20)
-      );
-    }
+    const ref = collection(db, "wallpapers");
+    const q =
+      category === "Home"
+        ? ref
+        : query(ref, where("category", "==", category));
 
     const snap = await getDocs(q);
 
