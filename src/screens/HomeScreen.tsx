@@ -44,12 +44,21 @@ export default function HomeScreen() {
         ))}
       </main>
 
-      {loading && (
-        <div className="flex justify-center py-10">
-          <Loader2 className="animate-spin" />
+      {!loading && wallpapers.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-24 text-slate-500">
+          <Search size={56} className="mb-4 opacity-30" />
+          <p className="text-xl font-semibold">No wallpapers found</p>
+          <p className="text-sm mt-1 text-slate-400">
+            Try switching category or searching something else
+          </p>
         </div>
       )}
-
+      {loading && (
+        <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+          <Loader2 className="animate-spin mb-3" size={32} />
+          <p className="text-sm">Loading wallpapers...</p>
+        </div>
+      )}
       <Footer />
     </div>
   );
