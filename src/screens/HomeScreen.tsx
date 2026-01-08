@@ -5,12 +5,35 @@ import { wallpaperService } from "../services/wallpaperService";
 import WallpaperCard from "../components/WallpaperCard";
 import CategoryTabs from "../components/CategoryTabs";
 import Footer from "../components/Footer";
+import runnerVideo from "../assets/runner.webm";
 
 export default function HomeScreen() {
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
   const [activeCategory, setActiveCategory] =
     useState<CategoryType>("Home");
   const [loading, setLoading] = useState(false);
+
+  /* 🔁 Funny rotating messages */
+  const emptyMessages = [
+    "Running across the galaxy for wallpapers… 🏃‍♂️💫",
+    "These pixels are playing hide & seek 👀",
+    "Try switching category & explorer 🚀",
+    "Your wallpaper is loading… somewhere 🌌",
+    "Good things take time… like 4K wallpapers 😌",
+    "Still running… don’t give up 🏃‍♂️",
+  ];
+
+  const [messageIndex, setMessageIndex] = useState(0);
+
+  useEffect(() => {
+    if (loading || wallpapers.length > 0) return;
+
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % emptyMessages.length);
+    }, 2800); // ~3 seconds
+
+    return () => clearInterval(interval);
+  }, [loading, wallpapers.length]);
 
   useEffect(() => {
     setLoading(true);
@@ -38,18 +61,27 @@ export default function HomeScreen() {
         onSelect={setActiveCategory}
       />
 
+      {/* Wallpapers Grid */}
       <main className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {wallpapers.map((w) => (
           <WallpaperCard key={w.id} wallpaper={w} />
         ))}
       </main>
-
       {!loading && wallpapers.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-24 text-slate-500">
-          <Search size={56} className="mb-4 opacity-30" />
-          <p className="text-xl font-semibold">No wallpapers found</p>
-          <p className="text-sm mt-1 text-slate-400">
-            Try switching category or searching something else
+        <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+          <video
+            src={runnerVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-56 h-56 mb-6"
+          />
+
+          <p
+            key={messageIndex}
+            className="text-xl font-semibold text-center text-slate-300 drop-shadow-md transition-opacity duration-500">
+            {emptyMessages[messageIndex]}
           </p>
         </div>
       )}
