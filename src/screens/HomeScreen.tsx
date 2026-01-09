@@ -8,32 +8,29 @@ import Footer from "../components/Footer";
 import runnerVideo from "../assets/runner.webm";
 
 export default function HomeScreen() {
-  const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
-  const [activeCategory, setActiveCategory] =
-    useState<CategoryType>("Home");
-  const [loading, setLoading] = useState(false);
 
-  /* 🔁 Funny rotating messages */
+  const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
+  const [activeCategory, setActiveCategory] = useState<CategoryType>("Home");
+  const [loading, setLoading] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
   const emptyMessages = [
     "Running across the galaxy for wallpapers… 🏃‍♂️💫",
     "These pixels are playing hide & seek 👀",
-    "Try switching category & explorer 🚀",
+    "Try switching category & explore 🚀",
     "Your wallpaper is loading… somewhere 🌌",
     "Good things take time… like 4K wallpapers 😌",
-    "Still running… don’t give up 🏃‍♂️",
   ];
 
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
-    if (loading || wallpapers.length > 0) return;
-
-    const interval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % emptyMessages.length);
-    }, 2800); // ~3 seconds
-
-    return () => clearInterval(interval);
-  }, [loading, wallpapers.length]);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -42,6 +39,14 @@ export default function HomeScreen() {
       setLoading(false);
     });
   }, [activeCategory]);
+
+  useEffect(() => {
+    if (loading || wallpapers.length > 0) return;
+    const interval = setInterval(() => {
+      setMessageIndex((i) => (i + 1) % emptyMessages.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, [loading, wallpapers.length]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -56,35 +61,47 @@ export default function HomeScreen() {
         </div>
       </div>
 
-      <CategoryTabs
-        activeCategory={activeCategory}
-        onSelect={setActiveCategory}
-      />
+      <div
+        className={`sticky top-[72px] z-30 transition-all duration-300 ${
+          scrolled
+            ? "bg-slate-950/80 backdrop-blur-md shadow-md shadow-black/40"
+            : "bg-transparent shadow-none"
+        }`}
+      >
+        <CategoryTabs
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+        />
+      </div>
 
-      {/* Wallpapers Grid */}
+      {/* Wallpapers */}
       <main className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {wallpapers.map((w) => (
           <WallpaperCard key={w.id} wallpaper={w} />
         ))}
       </main>
+
+      {/* Empty State */}
       {!loading && wallpapers.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+        <div className="flex flex-col items-center justify-center min-h-[50vh] text-slate-400">
           <video
             src={runnerVideo}
             autoPlay
             loop
             muted
             playsInline
-            className="w-56 h-56 mb-6"
+            className="w-40 h-40 mb-4"
           />
-
           <p
             key={messageIndex}
-            className="text-xl font-semibold text-center text-slate-300 drop-shadow-md transition-opacity duration-500">
+            className="text-xl font-semibold text-center transition-opacity duration-500"
+          >
             {emptyMessages[messageIndex]}
           </p>
         </div>
       )}
+
+      {/* Loading */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 text-slate-400">
           <Loader2 className="animate-spin mb-3" size={32} />
