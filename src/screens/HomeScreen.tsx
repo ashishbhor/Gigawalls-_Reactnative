@@ -90,13 +90,12 @@ export default function HomeScreen() {
             loop
             muted
             playsInline
-            className="w-40 h-40 mb-4"
+            className="w-40 h-40 mb-4 drop-shadow-[0_0_15px_rgba(255,215,120,0.15)]"
           />
           <p
             key={messageIndex}
-            className="text-xl font-semibold text-center transition-opacity duration-500"
-          >
-            {emptyMessages[messageIndex]}
+            className="text-xl font-semibold text-center text-slate-100 transition-opacity duration-500 drop-shadow-[0_0_12px_rgba(255,215,120,0.40)] animate-pulse">
+          {emptyMessages[messageIndex]}
           </p>
         </div>
       )}
