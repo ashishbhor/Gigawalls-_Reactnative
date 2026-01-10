@@ -2,6 +2,7 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
+import AboutScreen from "./screens/AboutScreen";
 import DetailScreen from './screens/DetailScreen';
 
 const App: React.FC = () => {
@@ -10,6 +11,7 @@ const App: React.FC = () => {
       <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-200">
         <Routes>
           <Route path="/" element={<HomeScreen />} />
+          <Route path="/about" element={<AboutScreen />} />
           <Route path="/wallpaper/:id" element={<DetailScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
