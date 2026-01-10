@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 import { Wallpaper, CategoryType } from "../types";
 import { wallpaperService } from "../services/wallpaperService";
 import WallpaperCard from "../components/WallpaperCard";
 import CategoryTabs from "../components/CategoryTabs";
 import Footer from "../components/Footer";
+import logo from "../assets/logo.png";
 import runnerVideo from "../assets/runner.webm";
 
 export default function HomeScreen() {
+  const navigate = useNavigate();
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
   const [activeCategory, setActiveCategory] = useState<CategoryType>("Home");
   const [loading, setLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [messageIndex, setMessageIndex] = useState(0);
 
   const emptyMessages = [
     "Running across the galaxy for wallpapers… 🏃‍♂️💫",
@@ -22,16 +28,14 @@ export default function HomeScreen() {
     "Good things take time… like 4K wallpapers 😌",
   ];
 
-  const [messageIndex, setMessageIndex] = useState(0);
-
+  /* Scroll shadow logic */
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 8);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* Fetch wallpapers */
   useEffect(() => {
     setLoading(true);
     wallpaperService.getWallpapers(activeCategory).then((data) => {
@@ -40,33 +44,73 @@ export default function HomeScreen() {
     });
   }, [activeCategory]);
 
+  /* Rotating empty messages */
   useEffect(() => {
     if (loading || wallpapers.length > 0) return;
-    const interval = setInterval(() => {
+    const id = setInterval(() => {
       setMessageIndex((i) => (i + 1) % emptyMessages.length);
     }, 2800);
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   }, [loading, wallpapers.length]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-slate-950 p-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-          <input
-            placeholder="Search wallpapers..."
-            className="w-full bg-slate-900 pl-10 pr-4 py-3 rounded-xl"
-          />
+      {/* HEADER */}
+      <div className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div
+  onClick={() => navigate("/")}
+  className="flex items-center gap-2 cursor-pointer"
+>
+  <img
+    src={logo}
+    alt="Gigawalls"
+    className="w-8 h-8 object-contain"
+  />
+  <span className="text-xl font-black tracking-tight text-white">
+    Giga<span className="text-blue-500">Walls</span>
+  </span>
+</div>
+
+          <div className="relative flex-1 mx-4 max-w-xl">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              placeholder="Search wallpapers..."
+              className="w-full bg-slate-900 pl-10 pr-4 py-2 rounded-xl text-sm"
+            />
+          </div>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 rounded-lg hover:bg-slate-800"
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
 
+      {/* MENU */}
       <div
-        className={`sticky top-[72px] z-30 transition-all duration-300 ${
-          scrolled
-            ? "bg-slate-950/80 backdrop-blur-md shadow-md shadow-black/40"
-            : "bg-transparent shadow-none"
-        }`}
+        className={`fixed top-[64px] right-4 z-50 w-48 rounded-xl
+        bg-slate-900/95 backdrop-blur-lg border border-slate-800 shadow-xl
+        transition-all duration-300
+        ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+      >
+        <button
+          onClick={() => {
+            setMenuOpen(false);
+            navigate("/about");
+          }}
+          className="w-full px-4 py-3 text-left hover:bg-slate-800 rounded-xl"
+        >
+          About Us
+        </button>
+      </div>
+
+      {/* CATEGORY BAR */}
+      <div
+        className={`sticky top-[72px] z-30 transition-all duration-300
+        ${scrolled ? "bg-slate-950/80 backdrop-blur-md shadow-md" : "bg-transparent"}`}
       >
         <CategoryTabs
           activeCategory={activeCategory}
@@ -74,39 +118,36 @@ export default function HomeScreen() {
         />
       </div>
 
-      {/* Wallpapers */}
+      {/* GRID */}
       <main className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {wallpapers.map((w) => (
           <WallpaperCard key={w.id} wallpaper={w} />
         ))}
       </main>
 
-      {/* Empty State */}
+      {/* EMPTY */}
       {!loading && wallpapers.length === 0 && (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] text-slate-400">
+        <div className="flex flex-col items-center justify-center min-h-[50vh]">
           <video
             src={runnerVideo}
             autoPlay
             loop
             muted
-            playsInline
-            className="w-40 h-40 mb-4 drop-shadow-[0_0_15px_rgba(255,215,120,0.15)]"
+            className="w-40 h-40 mb-4"
           />
-          <p
-            key={messageIndex}
-            className="text-xl font-semibold text-center text-slate-100 transition-opacity duration-500 drop-shadow-[0_0_12px_rgba(255,215,120,0.40)] animate-pulse">
-          {emptyMessages[messageIndex]}
+          <p className="text-xl font-semibold text-yellow-100 drop-shadow-md">
+            {emptyMessages[messageIndex]}
           </p>
         </div>
       )}
 
-      {/* Loading */}
+      {/* LOADING */}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-          <Loader2 className="animate-spin mb-3" size={32} />
-          <p className="text-sm">Loading wallpapers...</p>
+        <div className="flex justify-center py-16">
+          <Loader2 className="animate-spin" size={32} />
         </div>
       )}
+
       <Footer />
     </div>
   );
