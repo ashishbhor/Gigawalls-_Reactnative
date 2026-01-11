@@ -109,7 +109,7 @@ export default function HomeScreen() {
 
       {/* CATEGORY BAR */}
       <div
-        className={`sticky top-[72px] z-30 transition-all duration-300
+        className={`sticky top-[72px] z-30 mb-12 transition-all duration-300
         ${scrolled ? "bg-slate-950/80 backdrop-blur-md shadow-md" : "bg-transparent"}`}
       >
         <CategoryTabs
@@ -119,11 +119,24 @@ export default function HomeScreen() {
       </div>
 
       {/* GRID */}
-      <main className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {wallpapers.map((w) => (
-          <WallpaperCard key={w.id} wallpaper={w} />
-        ))}
-      </main>
+      <main className="px-6 pb-10">
+  <div
+    className="
+      mx-auto
+      max-w-[1080px]
+      grid
+      grid-cols-1
+      sm:grid-cols-2
+      lg:grid-cols-3
+      gap-6
+    "
+  >
+    {wallpapers.map((w) => (
+      <WallpaperCard key={w.id} wallpaper={w} />
+    ))}
+  </div>
+</main>
+
 
       {/* EMPTY */}
       {!loading && wallpapers.length === 0 && (
