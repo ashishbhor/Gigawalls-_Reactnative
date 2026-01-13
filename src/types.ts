@@ -42,4 +42,7 @@ export const RESOLUTIONS = [
   { label: "HD", width: 1280, height: 720 },
   { label: "Full HD", width: 1920, height: 1080 },
   { label: "4K", width: 3840, height: 2160 },
-];
+] as const;
+export type ResolutionLabel = "HD" | "Full HD" | "4K";
+
+export type ScreenRatio = "laptop" | "mobile" | "ultrawide";
