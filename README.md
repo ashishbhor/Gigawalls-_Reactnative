@@ -1,136 +1,158 @@
-# GigaWalls – Wallpaper Application
+# 🌌 GigaWalls — UHD Wallpapers Platform
 
-GigaWalls is a modern wallpaper browsing application built with React (web-first, scalable to React Native) that allows users to explore and download high-quality wallpapers across multiple categories such as Nature, Anime, Movies, Series, Games, Sci-Fi, Space, and more.
+GigaWalls is a modern, high-quality wallpaper browsing platform inspired by premium wallpaper websites like **UHDpaper**.  
+The project focuses on **clean UI**, **smooth UX**, and **intelligent image delivery** optimized for different screen sizes and devices.
 
-The app focuses on fast performance, clean UI, and scalable backend architecture using cloud services.
-
----
-
-## ✨ Key Features
-
-- Browse wallpapers by category
-- Infinite scrolling grid layout
-- Search wallpapers by name or tags
-- High-quality image previews
-- Multiple download options (HD / FHD / UHD)
-- Clean, dark-themed UI
-- No login required (open access)
+> ⚠️ **Note:** This project is actively under development. Some backend features are still in progress.
 
 ---
 
-## 🧩 Categories Supported
+## ✨ Key Features (Implemented)
 
-- Home (combined feed)
-- Nature
-- Anime
-- Movies
-- Series
-- Games
-- Animals
-- Celebrity
-- Comics
-- Sci-Fi
-- Space
+### 🖼️ Wallpaper Browsing
+- Category-based browsing (Anime, Nature, Space, Movies, etc.)
+- Clean 3-column grid layout inspired by UHDpaper
+- Optimized thumbnail display
+- Smooth hover effects with Preview & Download actions
+
+### 🔍 Preview Experience
+- Dedicated **Detail Screen** for each wallpaper
+- Large preview with title
+- Resolution-based download options (HD / Full HD / 4K)
+
+### 📱 Responsive Design
+- Optimized for desktop, tablet, and mobile screens
+- Adaptive grid layout with proper spacing and margins
+- Sticky category navigation with smooth scroll behavior
+
+### 🎨 UI & UX Enhancements
+- Animated empty-state with looping video and rotating messages
+- Smooth transitions, blur effects, and shadows
+- Minimal dark theme for focus on visuals
+- Hidden hamburger menu with About page navigation
+
+---
+
+## ⬇️ Smart Download System (In Progress)
+
+GigaWalls is designed to provide an **intelligent download experience**.
+
+### Current Progress
+- Download modal UI implemented
+- Device-based selection planned:
+  - 📱 Mobile
+  - 💻 Laptop / Desktop
+  - 🖥️ Ultrawide
+- Resolution logic structure prepared:
+  - HD
+  - Full HD
+  - 4K
+
+### Planned Behavior
+- User selects **device type**
+- Wallpaper downloads in the **correct aspect ratio**
+- Resolution is dynamically adjusted **from a single high-quality source image**
+
+---
+
+## ☁️ Cloudinary Integration (Ongoing)
+
+Cloudinary is used as the image delivery and optimization layer.
+
+### Advantages
+- Automatic image resizing
+- On-the-fly resolution transformation
+- Optimized image delivery for performance
+- One master image → multiple resolutions
+
+### Current Status
+- Cloudinary connected
+- URL-based transformation logic implemented
+- Full resolution mapping still in progress
+
+---
+
+## 🔥 Firebase (Firestore) Integration (Ongoing)
+
+Firebase is used as the backend database for wallpaper metadata.
+
+### Planned Data Structure
+- Wallpaper ID
+- Title
+- Category
+- Tags
+- Cloudinary image reference
+- Download configuration
+- Created timestamps
+
+### Current Status
+- Firebase connected
+- Initial data testing done
+- Full data migration and automation **in progress**
+
+---
+
+## 🧠 Project Structure (Updated)
+
+src/
+├── assets/
+├── components/
+│   ├── WallpaperCard.tsx
+│   ├── DownloadModal.tsx
+│   └── CategoryTabs.tsx
+├── screens/
+│   ├── HomeScreen.tsx
+│   ├── DetailScreen.tsx
+│   └── AboutScreen.tsx
+├── utils/
+│   └── cloudinary.ts
+├── types/
+│   └── media.d.ts
+├── services/
+│   └── wallpaperService.ts
+└── main.tsx
+
+
+## ❤️ Credits & Inspiration
+
+### Important Credit Notice
+All wallpaper images displayed on GigaWalls are the **property of their respective creators**.
+
+- Full credit goes to the original artists and platforms
+- **UHDpaper** is a major inspiration for this project
+- This project is a **fan-made tribute** and does **not claim ownership** of any artwork
+
+🔗 https://www.uhdpaper.com/
+
+GigaWalls exists for **learning, inspiration, and personal showcase purposes only**.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- React
-- TypeScript
-- Tailwind CSS
-- Lucide Icons
-
-### Backend / Services
-- Firebase Firestore (metadata storage)
-- Cloudinary (image hosting & CDN)
+- **Frontend:** React + TypeScript
+- **Styling:** Tailwind CSS
+- **Backend:** Firebase (Firestore)
+- **Media CDN:** Cloudinary
+- **Routing:** React Router
 
 ---
 
-## 📦 Project Structure
+## 🚧 Current Status
 
-src/
-├── components/
-│ ├── WallpaperCard.tsx
-│ ├── CategoryTabs.tsx
-│ └── Footer.tsx
-├── screens/
-│ ├── HomeScreen.tsx
-│ └── DetailScreen.tsx
-├── services/
-│ └── wallpaperService.ts (mock, to be replaced)
-├── types.ts
-└── App.tsx
+- UI & layout: ✅ Mostly complete  
+- Cloudinary logic: ⚠️ In progress  
+- Firebase automation: ⚠️ In progress  
+- Download intelligence: ⚠️ In progress  
 
+This README will be updated as features are finalized.
 
 ---
 
-## 🔥 Current Development Status
+## 📌 Developer Note
 
-### ✅ Completed
-- Core UI layout
-- Category-based navigation
-- Infinite scroll implementation
-- Wallpaper grid & detail screens
-- Footer component
-- Cloudinary folder-based image organization
-- Firebase project & Firestore database setup
-- Metadata structure finalized for wallpapers
-
-### 🚧 In Progress
-- Bulk upload automation from Cloudinary → Firestore
-- Replacing mock wallpaper service with Firestore data
-- Real-time fetching of wallpapers from Firestore
-- Download buttons wired to Cloudinary URLs
-
----
-
-## ☁️ Cloudinary Workflow (Image Storage)
-
-- All wallpapers are stored in **Cloudinary**
-- Images are organized by folders matching categories:
-
-Category/Gigawalls/
-├── Nature/
-├── Anime/
-├── Movie/
-├── Series/
-├── Game/
-├── Sci-Fi/
-└── Space/
-
-
-- Each image is uploaded **once**
-- Cloudinary dynamically serves:
-  - Thumbnail (w_400)
-  - HD (w_1280)
-  - FHD (w_1920)
-  - UHD / 4K (w_3840)
-
-No duplicate image uploads are required.
-
----
-
-## 🔥 Firestore Data Structure (Metadata Only)
-
-Firestore stores **only metadata and image URLs**, not images.
-
-### Collection: `wallpapers`
-
-Each document follows this structure:
-
-```json
-{
-  "title": "Misty Forest",
-  "category": "Nature",
-  "slug": "misty-forest-01",
-  "thumbnail": "CLOUDINARY_THUMBNAIL_URL",
-  "downloads": {
-    "hd": "CLOUDINARY_HD_URL",
-    "fhd": "CLOUDINARY_FHD_URL",
-    "uhd": "CLOUDINARY_UHD_URL"
-  },
-  "tags": ["nature", "forest", "misty"],
-  "createdAt": "timestamp"
-}
+This project is part of a continuous learning process focused on:
+- Modern frontend architecture
+- Media optimization
+- Real-world UI/UX patterns
+- Scalable cloud-based image delivery
