@@ -1,11 +1,18 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Download, ArrowLeft } from "lucide-react";
-import { Wallpaper, RESOLUTIONS } from "../types";
+import { useState } from "react";
+
+import { Wallpaper, RESOLUTIONS, ResolutionLabel } from "../types";
+import DownloadModal from "../components/DownloadModal";
 
 export default function DetailScreen() {
   const navigate = useNavigate();
   const location = useLocation();
   const wallpaper = location.state as Wallpaper | undefined;
+
+  const [open, setOpen] = useState(false);
+  const [resolution, setResolution] =
+    useState<ResolutionLabel>("HD");
 
   if (!wallpaper) {
     return (
@@ -31,19 +38,31 @@ export default function DetailScreen() {
         />
       </div>
 
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">{wallpaper.title}</h1>
+      <div className="p-6 max-w-xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6">{wallpaper.title}</h1>
 
         {RESOLUTIONS.map((r) => (
           <button
             key={r.label}
-            className="flex justify-between w-full bg-slate-800 p-4 rounded-xl mb-3"
+            onClick={() => {
+              setResolution(r.label);
+              setOpen(true);
+            }}
+            className="flex justify-between w-full bg-slate-800 p-4 rounded-xl mb-3 hover:bg-slate-700"
           >
             {r.label}
             <Download />
           </button>
         ))}
       </div>
+
+      <DownloadModal
+        open={open}
+        onClose={() => setOpen(false)}
+        imageUrl={wallpaper.original}
+        resolution={resolution}
+        title={wallpaper.title}
+      />
     </div>
   );
 }
