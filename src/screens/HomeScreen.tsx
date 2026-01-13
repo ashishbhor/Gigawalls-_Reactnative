@@ -7,6 +7,8 @@ import { wallpaperService } from "../services/wallpaperService";
 import WallpaperCard from "../components/WallpaperCard";
 import CategoryTabs from "../components/CategoryTabs";
 import Footer from "../components/Footer";
+import DownloadModal from "../components/DownloadModal";
+
 import logo from "../assets/logo.png";
 import runnerVideo from "../assets/runner.webm";
 
@@ -18,8 +20,14 @@ export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState<CategoryType>("Home");
   const [loading, setLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [messageIndex, setMessageIndex] = useState(0);
 
+  /* Download modal state */
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [selectedWallpaper, setSelectedWallpaper] =
+    useState<Wallpaper | null>(null);
+
+  /* Empty state messages */
+  const [messageIndex, setMessageIndex] = useState(0);
   const emptyMessages = [
     "Running across the galaxy for wallpapers… 🏃‍♂️💫",
     "These pixels are playing hide & seek 👀",
@@ -28,7 +36,7 @@ export default function HomeScreen() {
     "Good things take time… like 4K wallpapers 😌",
   ];
 
-  /* Scroll shadow logic */
+  /* Scroll shadow */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
@@ -44,7 +52,7 @@ export default function HomeScreen() {
     });
   }, [activeCategory]);
 
-  /* Rotating empty messages */
+  /* Rotating message */
   useEffect(() => {
     if (loading || wallpapers.length > 0) return;
     const id = setInterval(() => {
@@ -59,18 +67,14 @@ export default function HomeScreen() {
       <div className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
         <div className="flex items-center justify-between px-4 py-3">
           <div
-  onClick={() => navigate("/")}
-  className="flex items-center gap-2 cursor-pointer"
->
-  <img
-    src={logo}
-    alt="Gigawalls"
-    className="w-8 h-8 object-contain"
-  />
-  <span className="text-xl font-black tracking-tight text-white">
-    Giga<span className="text-blue-500">Walls</span>
-  </span>
-</div>
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <img src={logo} className="w-8 h-8" />
+            <span className="text-xl font-black">
+              Giga<span className="text-blue-500">Walls</span>
+            </span>
+          </div>
 
           <div className="relative flex-1 mx-4 max-w-xl">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -80,37 +84,17 @@ export default function HomeScreen() {
             />
           </div>
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 rounded-lg hover:bg-slate-800"
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          <button onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
       </div>
 
-      {/* MENU */}
-      <div
-        className={`fixed top-[64px] right-4 z-50 w-48 rounded-xl
-        bg-slate-900/95 backdrop-blur-lg border border-slate-800 shadow-xl
-        transition-all duration-300
-        ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
-      >
-        <button
-          onClick={() => {
-            setMenuOpen(false);
-            navigate("/about");
-          }}
-          className="w-full px-4 py-3 text-left hover:bg-slate-800 rounded-xl"
-        >
-          About Us
-        </button>
-      </div>
-
       {/* CATEGORY BAR */}
       <div
-        className={`sticky top-[72px] z-30 mb-12 transition-all duration-300
-        ${scrolled ? "bg-slate-950/80 backdrop-blur-md shadow-md" : "bg-transparent"}`}
+        className={`sticky top-[72px] z-30 mb-12 transition ${
+          scrolled ? "bg-slate-950/80 backdrop-blur-md shadow-md" : ""
+        }`}
       >
         <CategoryTabs
           activeCategory={activeCategory}
@@ -120,48 +104,48 @@ export default function HomeScreen() {
 
       {/* GRID */}
       <main className="px-6 pb-10">
-  <div
-    className="
-      mx-auto
-      max-w-[1080px]
-      grid
-      grid-cols-1
-      sm:grid-cols-2
-      lg:grid-cols-3
-      gap-6
-    "
-  >
-    {wallpapers.map((w) => (
-      <WallpaperCard key={w.id} wallpaper={w} />
-    ))}
-  </div>
-</main>
-
+        <div className="mx-auto max-w-[1080px] grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {wallpapers.map((w) => (
+            <WallpaperCard
+              key={w.id}
+              wallpaper={w}
+              onDownload={() => {
+                setSelectedWallpaper(w);
+                setDownloadOpen(true);
+              }}
+            />
+          ))}
+        </div>
+      </main>
 
       {/* EMPTY */}
       {!loading && wallpapers.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
-          <video
-            src={runnerVideo}
-            autoPlay
-            loop
-            muted
-            className="w-40 h-40 mb-4"
-          />
-          <p className="text-xl font-semibold text-yellow-100 drop-shadow-md">
+          <video src={runnerVideo} autoPlay loop muted className="w-40 h-40" />
+          <p className="text-xl text-yellow-100 mt-3">
             {emptyMessages[messageIndex]}
           </p>
         </div>
       )}
 
-      {/* LOADING */}
       {loading && (
         <div className="flex justify-center py-16">
-          <Loader2 className="animate-spin" size={32} />
+          <Loader2 className="animate-spin" />
         </div>
       )}
 
       <Footer />
+
+      {/* DOWNLOAD MODAL (HD only) */}
+      {selectedWallpaper && (
+        <DownloadModal
+          open={downloadOpen}
+          onClose={() => setDownloadOpen(false)}
+          imageUrl={selectedWallpaper.original}
+          resolution="HD"
+          title={selectedWallpaper.title}
+        />
+      )}
     </div>
   );
 }
