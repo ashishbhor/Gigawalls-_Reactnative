@@ -98,7 +98,7 @@ export default function WallpaperCard({ wallpaper }: Props) {
             "
           >
             <Download size={14} />
-            HD
+            
           </a>
         </div>
       )}
